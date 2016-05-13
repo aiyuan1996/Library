@@ -48,7 +48,7 @@ public class SearchBook extends JPanel implements ActionListener{
 	}
 	Vector<Vector> data = new Vector<Vector>();//存放检索出的书的信息
 	DefaultTableModel dtm = new DefaultTableModel(data,head);//创建表格模型
-	JTable jt = new JTable(dtm);
+	JTable jt = new JTable(dtm);//创建JTable对象
 	JScrollPane jspn = new JScrollPane(jt);//将table添加到滚动窗口
 	
 	@Override
