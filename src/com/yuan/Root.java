@@ -23,6 +23,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 
 
 public class Root extends JFrame{
@@ -107,10 +108,11 @@ public class Root extends JFrame{
 					cl.show(jP, "bm");
 				}
 				if(cnv.value.equals("查询图书")){
-					cl.show(jP, "sb");
+					//cl.show(new SearchBook(), null);
+					cl.show(new SearchBook(), "查询图书");
 				}
 				if(cnv.value.equals("借阅预约图书")){
-					cl.show(jP, "bb");
+					cl.show(new BorrowBook(), "借阅预约图书");
 				}
 				if(cnv.value.equals("归还挂失图书")){
 					cl.show(jP, "rb");
@@ -133,21 +135,22 @@ public class Root extends JFrame{
 	private void initJP() {
 		jP.setLayout(cl);//设置布局管理器为卡片布局
 		jP.add(jlRoot,"root");//添加根结点显示信息
-		jP.add(new Student(),"stu");//添加学生管理模块界面
+		/*jP.add(new Student(),"stu");//添加学生管理模块界面
 		jP.add(new BookManage(),"bm");//添加图书管理模块界面
 		jP.add(new SearchBook(),"sb");//添加查找图书管理界面
 		jP.add(new BorrowBook(),"bb");//添加借阅预约图书模块界面
 		jP.add(new ReturnBook(),"rb");//添加归还挂失图书界面
 		jP.add(new Manager(mgNo),"Manager");//添加管理员管理模块界面
 		jP.add(new ExceedTime(),"et");//添加罚款处理界面
-		
+*/		
 	}
 
 	
 
 	private void setManager() throws SQLException {
 		String str="";
-		String sql="select permitted from manager where mgNo='"+mgNo+"'";//搜索管理员权限的SQL语句
+		//String sql="select permitted from manager where mgNo='"+mgNo+"'";//搜索管理员权限的SQL语句
+		String sql="select permitted from manager where mgNo="+mgNo;//搜索管理员权限的SQL语句
 		
 		try {
 			DataBase db = new DataBase();//创建数据库对象
