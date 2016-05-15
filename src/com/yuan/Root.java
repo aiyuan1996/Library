@@ -115,7 +115,7 @@ public class Root extends JFrame{
 					cl.show(new BorrowBook(), "借阅预约图书");
 				}
 				if(cnv.value.equals("归还挂失图书")){
-					cl.show(jP, "rb");
+					cl.show(new ReturnBook(), "归还挂失图书");
 				}
 				if(cnv.value.equals("缴纳罚款")){
 					cl.show(jP, "et");
@@ -168,9 +168,9 @@ public class Root extends JFrame{
 		}
 	
 	} 
-	public static void main(String args[]) throws SQLException{
+	/*public static void main(String args[]) throws SQLException{
 		new Root("1001");
-	}
+	}*/
 
 }
 
