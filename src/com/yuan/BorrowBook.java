@@ -43,6 +43,7 @@ public class BorrowBook extends  JFrame implements ActionListener{
 		head.add("书名");
 		head.add("作者");
 		head.add("出版社");
+		head.add("购买时间");
 		head.add("是否借阅");
 		head.add("是否预约");
 	}
@@ -120,13 +121,80 @@ public class BorrowBook extends  JFrame implements ActionListener{
 					if(db.resultset.getString("permitten").equals("否")){
 						JOptionPane.showMessageDialog(this, "您无此权限", "消息", JOptionPane.INFORMATION_MESSAGE);
 					}
-					else {
+					else {//若有权限，则查找所输入的书号是否存在于Book表中
+						sql = "select *from book where bookNo = " + Integer.parseInt(jtxt1.getText().trim());
 						db.selectDb(sql);
 						do{
-							String borrowed = null;//存于book表中
-							String ordered = null;
-							String bookName = null;//定义输入书号所对应图书的书名
-							String author = null;//定义输入书号对应图书的作者
+							if(!db.resultset.next()){
+								JOptionPane.showMessageDialog(this, "没有您要查找的内容", "消息", JOptionPane.INFORMATION_MESSAGE);
+							}
+							Vector<String>v = new Vector<String>();//创建向量
+							for(int i = 1;i <= 7;i++){
+								//顺序得到查找结果中的各项记录
+								if(i == 1){
+									String str = db.resultset.getString("BookNo").trim();
+									str = new String(str.getBytes(),"gb2312");
+									v.add(str);//添加到向量中
+								}
+								if(i == 1){
+									String str = db.resultset.getString("BookNo").trim();
+									str = new String(str.getBytes(),"gb2312");
+									v.add(str);//添加到向量中
+								}
+								if(i == 2){
+									String str = db.resultset.getString("BookName").trim();
+									str = new String(str.getBytes(),"gb2312");
+									v.add(str);//添加到向量中
+								}
+								if(i == 3){
+									String str = db.resultset.getString("author").trim();
+									str = new String(str.getBytes(),"gb2312");
+									v.add(str);//添加到向量中
+								}
+								if(i == 4){
+									String str = db.resultset.getString("publishment").trim();
+									str = new String(str.getBytes(),"gb2312");
+									v.add(str);//添加到向量中
+								}
+								if(i == 5){
+									String str = db.resultset.getString("buytime").trim();
+									str = new String(str.getBytes(),"gb2312");
+									v.add(str);//添加到向量中
+								}
+								if(i == 6){
+									String str = db.resultset.getString("borrowed").trim();
+									str = new String(str.getBytes(),"gb2312");
+									v.add(str);//添加到向量中
+								}
+								if(i == 7){
+									String str = db.resultset.getString("ordered").trim();
+									str = new String(str.getBytes(),"gb2312");
+									v.add(str);//添加到向量中
+								}
+							}
+							vtemp.add(v);//更新结果框的内容
+							dtm.setDataVector(vtemp, head);//设置表格显示内容
+							jt.updateUI();
+							jt.repaint();
+							
+							if(jrbArray[0].isSelected()){//选择了借图书
+								if(db.resultset.getString("Borrowed").trim().equals("是")){
+									JOptionPane.showMessageDialog(this, "此书已经被借走", "消息", JOptionPane.INFORMATION_MESSAGE);
+								}
+								else if(db.resultset.getString("ordered").trim().equals("是")){
+									JOptionPane.showMessageDialog(this, "此书已经被预约，不能借", "消息", JOptionPane.INFORMATION_MESSAGE);
+								}
+								else {
+									java.util.Date now = new java.util.Date();//获取当前日期来记录借书时间和还书时间
+									sql = "update book set borrowed = '是' where bookNo = " + Integer.parseInt(jtxt1.getText().trim());
+									db.updateDb(sql);//更新表
+									JOptionPane.showMessageDialog(this, "借书成功", "消息", JOptionPane.INFORMATION_MESSAGE);
+									sql="insert into ORDERREPORT values("+Integer.parseInt(jtxt1.getText().trim())
+											+",'"+stuName+"','"+classes+"','"+db.resultset.getString("bookName")+"',"
+										    +Integer.parseInt(jtxt2.getText().trim())+",'"+db.resultset.getString("author")+"')";
+									db.updateDb(sql);
+								}
+							}
 							
 						}while(db.resultset.next());
 					}
