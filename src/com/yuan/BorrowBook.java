@@ -191,7 +191,7 @@ public class BorrowBook extends  JFrame implements ActionListener{
 									sql="insert into RECORD values("+Integer.parseInt(jtxt1.getText().trim())+","
 										    +Integer.parseInt(jtxt2.getText().trim())+",'"+(now.getYear()+1900)+"."
 										    +(now.getMonth()+1)+"."+now.getDate()+"',"+"'"+(now.getYear()+1900)+"."
-										    +(now.getMonth()+2)+"."+now.getDate()+"','否','否')";
+										    +(now.getMonth()+2)+"."+now.getDate()+"','是','否')";
 										db.updateDb(sql);//将该书记录插入Record表中
 								}
 							}

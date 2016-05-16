@@ -182,8 +182,67 @@ public class ReturnBook extends JFrame implements ActionListener {
 		
 	}
 	private void loseBook(int row) {
-		// TODO Auto-generated method stub
-		
+		String bname = "";
+		int lbno = 0;
+		int bno = Integer.parseInt((String) jt.getValueAt(row, 0));//得到丢失图书的书号
+		String sno = (String) jt.getValueAt(row, 1);
+		sql = "select bookname from book where Bookno = " + bno;
+		try {
+			db = new DataBase();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		db.selectDb(sql);
+		try {
+			if(db.resultset.next()){//遍历结果集
+				bname = db.resultset.getString("bookname").trim();
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		sql = "select MAX(lbno) from Losebook ";//找到最大的丢失记录号的SQL语句
+		db.selectDb(sql);
+		try {
+			if(db.resultset.next()){
+				lbno = db.resultset.getInt("bookNo");
+				lbno++;
+			}
+				
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		sql="insert into LOSEBOOK values("+lbno+","+sno+","+bno+",'"+bname+"')";//向丢书记录表中插入记录
+		db.selectDb(sql);
+		try {
+			while(db.resultset.next()){
+				sql = "delete from orderreport where bookno = "+bno;db.updateDb(sql);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		sql = "select bookno form exceedtime where bookno="+bno;
+		db.selectDb(sql);
+		try {
+			while(db.resultset.next()){
+				sql = "delete from exteedtime where bookno = " + bno;
+				db.updateDb(sql);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		sql = "delete from book where bookno = "+ bno;
+		int i = db.updateDb(sql);
+		db.dbClose();
+		if(i > 0){
+			JOptionPane.showMessageDialog(this, "恭喜你，挂失成功", "消息", JOptionPane.INFORMATION_MESSAGE);
+			return ;
+		}
+		else {
+			JOptionPane.showMessageDialog(this, "不好意思，挂失失败", "消息", JOptionPane.INFORMATION_MESSAGE);
+			return ;
+		}
 	}
 
 
